@@ -14,10 +14,23 @@ export default function Home() {
       </section>
 
       <section className="ptv-radio">
-        <h2>PARIAH RADIO</h2>
-        <p>Now Playing: HYPE CITY — BIG BANGER</p>
-        <div className="ptv-waveform"></div>
-      </section>
+  <h2>PARIAH RADIO</h2>
+  <p>Now Playing: HYPE CITY — BIG BANGER</p>
+
+  <div className="ptv-waveform">
+    <div className="bar"></div>
+    <div className="bar"></div>
+    <div className="bar"></div>
+    <div className="bar"></div>
+    <div className="bar"></div>
+    <div className="bar"></div>
+    <div className="bar"></div>
+    <div className="bar"></div>
+    <div className="bar"></div>
+    <div className="bar"></div>
+  </div>
+</section>
+
 
       <section className="ptv-chat">
         <p><strong>User123:</strong> This is fire! 🔥</p>
