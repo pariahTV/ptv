@@ -1,18 +1,39 @@
-export default function Home() {
-  return (
-    <main style={{ textAlign: "center", paddingTop: "40px" }}>
-      <h1>PariahTV Viewer</h1>
+import Header from "../components/Header";
 
-      <img src="/logos/pariah-tv-logo.PNG" alt="PariahTV Logo" width="180" />
-      <img src="/logos/pariah-tv-full.PNG" alt="PariahTV Full Banner" width="260" />
-      <img src="/logos/ptv-silhouette.PNG" alt="PTV Silhouette" width="140" />
-    </main>
-  );
-}
 export default function Home() {
   return (
-    <main style={{ paddingTop: "90px", textAlign: "center" }}>
-      <h1>PariahTV Viewer</h1>
+    <main className="ptv-main">
+      <Header />
+
+      <section className="ptv-video">
+        <img src="/logos/ptv-silhouette.png" alt="PTV Silhouette" className="ptv-video-overlay" />
+        <div className="ptv-breaking-news">
+          BREAKING NEWS: PARIAHTV LAUNCHES — JOIN NOW! | STREAM
+        </div>
+      </section>
+
+      <section className="ptv-radio">
+        <h2>PARIAH RADIO</h2>
+        <p>Now Playing: HYPE CITY — BIG BANGER</p>
+        <div className="ptv-waveform"></div>
+      </section>
+
+      <section className="ptv-chat">
+        <p><strong>User123:</strong> This is fire! 🔥</p>
+        <p><strong>GamerGal:</strong> Awesome stream!</p>
+        <p><strong>BeatsByJay:</strong> Loving this track!</p>
+        <p><strong>SkaterDude:</strong> When’s the next show?</p>
+      </section>
+
+      <footer className="ptv-footer">
+        <img src="/logos/pariah-tv-logo.png" alt="PariahTV Logo" className="ptv-footer-logo" />
+        <div className="ptv-nav">
+          <span>After Dark</span>
+          <span>Live Sets</span>
+          <span>Retro Wave</span>
+          <span>Chill Zone</span>
+        </div>
+      </footer>
     </main>
   );
 }
