@@ -32,3 +32,65 @@ img:hover {
   height: 40px;
   filter: drop-shadow(0 0 4px rgba(255,255,255,0.3));
 }
+body {
+  background-color: #000;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+
+.ptv-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #000;
+  border-bottom: 2px solid #900;
+  padding: 10px 20px;
+}
+
+.ptv-header-logo {
+  height: 40px;
+}
+
+.ptv-live-tag {
+  background: #900;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.ptv-video {
+  margin-top: 20px;
+  background: url('/logos/ptv-silhouette.png') center/cover no-repeat;
+  height: 220px;
+  position: relative;
+}
+
+.ptv-breaking-news {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: #900;
+  padding: 6px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.ptv-radio, .ptv-chat, .ptv-footer {
+  margin: 20px;
+  text-align: center;
+}
+
+.ptv-footer-logo {
+  height: 30px;
+  margin-bottom: 10px;
+}
+
+.ptv-nav span {
+  margin: 0 10px;
+  color: #ccc;
+  cursor: pointer;
+}
+.ptv-nav span:hover {
+  color: #fff;
+}
