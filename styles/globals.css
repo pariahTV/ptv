@@ -94,3 +94,17 @@ body {
 .ptv-nav span:hover {
   color: #fff;
 }
+/* === PariahTV Animated Glow === */
+@keyframes ptvGlow {
+  0% { box-shadow: 0 0 4px #900; }
+  50% { box-shadow: 0 0 14px #f00; }
+  100% { box-shadow: 0 0 4px #900; }
+}
+
+.ptv-header {
+  animation: ptvGlow 2.4s infinite ease-in-out;
+}
+
+.ptv-video {
+  animation: ptvGlow 3s infinite ease-in-out;
+}
