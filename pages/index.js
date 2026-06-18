@@ -18,244 +18,91 @@ export default function Home() {
   const [playerState, setPlayerState] = useState({
     playing: false,
     currentTrackIndex: 0,
+    nowPlaying: "Loading…",
+    duration: "Loading…",
   });
 
   // Load Firebase data
   useEffect(() => {
     if (!db) return;
 
-    // Spotlight creators
-    const spotlightRef = ref(db, "pariahTV/spotlightCreators");
+    // Spotlight data
+    const spotlightRef = ref(db, "spotlight");
     onValue(spotlightRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setNowPlaying({
+          title: data.title,
+          track: data.artist,
+          ticker: data.status,
+        });
+      }
+    });
+
+    // Player data
+    const playerRef = ref(db, "player");
+    onValue(playerRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setPlayerState({
+          playing: true,
+          currentTrackIndex: 0,
+          nowPlaying: data.nowPlaying,
+          duration: data.duration,
+        });
+      }
+    });
+
+    // Optional: Spotlight creators
+    const creatorsRef = ref(db, "pariahTV/spotlightCreators");
+    onValue(creatorsRef, (snapshot) => {
       const data = snapshot.val() || {};
       const list = Object.values(data);
       setCreators(list);
       setCreatorIndex(0);
     });
-
-    // Now Playing
-    const nowRef = ref(db, "pariahTV/nowPlaying");
-    onValue(nowRef, (snapshot) => {
-      const data = snapshot.val() || {};
-      setNowPlaying({
-        title: data.title || "HYPE CITY — EP. 07",
-        track: data.track || "BIG BANGER",
-        ticker:
-          data.ticker ||
-          "BREAKING NEWS: PARIAHTV IS LIVE — NEW SHOWS DROPPING — STAY LOCKED IN —",
-      });
-    });
-
-    // Player state
-    const playerRef = ref(db, "pariahTV/playerState");
-    onValue(playerRef, (snapshot) => {
-      const data = snapshot.val() || {};
-      setPlayerState({
-        playing: !!data.playing,
-        currentTrackIndex: data.currentTrackIndex || 0,
-      });
-    });
   }, []);
 
-  // Rotate Spotlight creators
-  useEffect(() => {
-    if (!creators.length) return;
-    const interval = setInterval(() => {
-      setCreatorIndex((prev) => (prev + 1) % creators.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, [creators]);
-
-  const currentCreator = creators[creatorIndex] || {
-    name: "Loading…",
-    role: "Loading…",
-    line: "Loading…",
-    img: "/logos/pariah-tv-full.PNG",
-    link: "#",
-    featured: false,
-  };
-
-  // Player controls
-  const togglePlay = () => {
-    set(ref(db, "pariahTV/playerState"), {
-      ...playerState,
-      playing: !playerState.playing,
+  // Example Control Room edit function
+  const updateSpotlight = (newTitle, newArtist, newStatus) => {
+    set(ref(db, "spotlight"), {
+      title: newTitle,
+      artist: newArtist,
+      status: newStatus,
     });
   };
-
-  const nextTrack = () => {
-    set(ref(db, "pariahTV/playerState"), {
-      ...playerState,
-      currentTrackIndex: playerState.currentTrackIndex + 1,
-    });
-  };
-
-  const prevTrack = () => {
-    set(ref(db, "pariahTV/playerState"), {
-      ...playerState,
-      currentTrackIndex:
-        playerState.currentTrackIndex > 0
-          ? playerState.currentTrackIndex - 1
-          : 0,
-    });
-  };
-
-  // Floating hearts (only emoji allowed)
-  useEffect(() => {
-    const container = document.querySelector(".ptv-emoji-container");
-    if (!container) return;
-
-    const spawn = () => {
-      const el = document.createElement("div");
-      el.className = "ptv-emoji";
-      el.innerText = "❤️";
-      el.style.left = Math.random() * 80 + "%";
-      el.style.animationDuration = 2 + Math.random() * 2 + "s";
-      container.appendChild(el);
-      setTimeout(() => el.remove(), 4000);
-    };
-
-    const interval = setInterval(spawn, 1200);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
-    <main className="ptv-main">
+    <div style={{ color: "white", backgroundColor: "black", padding: "20px" }}>
+      <h1>Pariah TV Viewer</h1>
 
-      {/* VIDEO PLAYER */}
-      <section className="ptv-video ptv-glass fade-up">
-        <div className="ptv-video-overlay-top">
-          <img
-            src="/logos/ptv-silhouette.PNG"
-            className="ptv-corner-bug"
-            alt="PTV Bug"
-          />
-          <div className="ptv-live-pill">LIVE</div>
-        </div>
-
-        <div className="ptv-video-overlay-bottom">
-          <div className="ptv-show-strip">{nowPlaying.title}</div>
-          <div className="ptv-now-playing">Now Playing: {nowPlaying.track}</div>
-        </div>
-
-        <div className="ptv-breaking-news">
-          <span>{nowPlaying.ticker}</span>
-        </div>
+      <section>
+        <h2>{nowPlaying.title}</h2>
+        <p>{nowPlaying.track}</p>
+        <p>{nowPlaying.ticker}</p>
       </section>
 
-      {/* CREATOR SPOTLIGHT */}
-      <section className="ptv-creator-spotlight ptv-glass fade-up">
-        <div
-          className={
-            "ptv-featured-badge" + (currentCreator.featured ? " active" : "")
-          }
-        >
-          FEATURED
-        </div>
-
-        <img
-          src={currentCreator.img}
-          alt="Creator"
-          className="ptv-creator-image"
-        />
-
-        <div className="ptv-creator-info">
-          <h3 className="ptv-creator-name">{currentCreator.name}</h3>
-          <p className="ptv-creator-role">{currentCreator.role}</p>
-          <p className="ptv-creator-line">{currentCreator.line}</p>
-
-          <a
-            href={currentCreator.link}
-            target="_blank"
-            rel="noreferrer"
-            className="ptv-creator-btn"
-          >
-            View Profile
-          </a>
-        </div>
+      <section>
+        <h3>Now Playing: {playerState.nowPlaying}</h3>
+        <p>Duration: {playerState.duration}</p>
       </section>
 
-      {/* PLAYER CONTROLS */}
-      <section className="ptv-player-controls ptv-glass fade-up">
-        <div className="ptv-controls-row">
-          <button className="ptv-btn" onClick={prevTrack}>
-            <span className="ptv-btn-label">PREV</span>
-          </button>
-
-          <button
-            className={
-              "ptv-btn ptv-btn-play" +
-              (playerState.playing ? " ptv-btn-active" : "")
-            }
-            onClick={togglePlay}
-          >
-            <span className="ptv-btn-label">
-              {playerState.playing ? "PAUSE" : "PLAY"}
-            </span>
-          </button>
-
-          <button className="ptv-btn" onClick={nextTrack}>
-            <span className="ptv-btn-label">NEXT</span>
-          </button>
-
-          <div className="ptv-time-display">00:12 / 03:48</div>
-        </div>
-
-        <div className="ptv-progress-bar">
-          <div className="ptv-progress-fill"></div>
-        </div>
-
-        <div className="ptv-volume-row">
-          <span className="ptv-volume-label">VOL</span>
-          <input type="range" min="0" max="100" className="ptv-volume-slider" />
-        </div>
-      </section>
-
-      {/* RADIO */}
-      <section className="ptv-radio ptv-glass fade-up">
-        <h2>PARIAH RADIO</h2>
-        <p>Now Playing: {nowPlaying.track}</p>
-
-        <div className="ptv-waveform">
-          {Array.from({ length: 10 }).map((_, i) => (
-            <div key={i} className="bar"></div>
+      <section>
+        <h4>Spotlight Creators</h4>
+        <ul>
+          {creators.map((creator, i) => (
+            <li key={i}>{creator}</li>
           ))}
-        </div>
+        </ul>
       </section>
 
-      {/* CHAT */}
-      <section className="ptv-chat ptv-glass fade-up">
-        <div className="ptv-chat-message">
-          <strong>User123:</strong> This is fire
-        </div>
-        <div className="ptv-chat-message">
-          <strong>GamerGal:</strong> Loving this stream
-        </div>
-        <div className="ptv-chat-message">
-          <strong>BeatsByJay:</strong> Big tune!
-        </div>
-        <div className="ptv-chat-message">
-          <strong>SkaterDude:</strong> When’s the next show
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="ptv-footer ptv-glass fade-up">
-        <img
-          src="/logos/pariah-tv-logo.PNG"
-          alt="PariahTV Logo"
-          className="ptv-footer-logo"
-        />
-        <div className="ptv-nav">
-          <span>After Dark</span>
-          <span>Live Sets</span>
-          <span>Retro Wave</span>
-          <span>Chill Zone</span>
-        </div>
-      </footer>
-
-      {/* FLOATING HEARTS */}
-      <div className="ptv-emoji-container"></div>
-    </main>
+      <button
+        onClick={() =>
+          updateSpotlight("Pariah TV Live", "Cee Fiitz", "LIVE")
+        }
+      >
+        Update Spotlight
+      </button>
+    </div>
   );
 }
