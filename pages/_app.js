@@ -5,7 +5,7 @@ export default function App({ Component, pageProps }) {
     <>
       <header className="ptv-header">
         <img
-          src="/logos/pariah-tv-logo.png"
+          src="/logos/pariah-tv-logo.PNG"
           alt="PariahTV Logo"
           className="ptv-header-logo"
         />
