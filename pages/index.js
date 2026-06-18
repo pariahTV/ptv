@@ -1,22 +1,28 @@
 import { useEffect, useState } from "react";
-import { getDatabase, ref, onValue, set } from "firebase/database";
-import { app } from "../firebase"; // your Firebase config
+import { db } from "../firebase";
+import { ref, onValue, set } from "firebase/database";
 
 export default function Home() {
+  // Spotlight creators
   const [creators, setCreators] = useState([]);
   const [creatorIndex, setCreatorIndex] = useState(0);
+
+  // Now Playing
   const [nowPlaying, setNowPlaying] = useState({
     title: "Loading…",
     track: "Loading…",
     ticker: "Loading…",
   });
-  const [playerState, setPlayerStateLocal] = useState({
+
+  // Player state
+  const [playerState, setPlayerState] = useState({
     playing: false,
     currentTrackIndex: 0,
   });
 
+  // Load Firebase data
   useEffect(() => {
-    const db = getDatabase(app);
+    if (!db) return;
 
     // Spotlight creators
     const spotlightRef = ref(db, "pariahTV/spotlightCreators");
@@ -27,7 +33,7 @@ export default function Home() {
       setCreatorIndex(0);
     });
 
-    // Now playing
+    // Now Playing
     const nowRef = ref(db, "pariahTV/nowPlaying");
     onValue(nowRef, (snapshot) => {
       const data = snapshot.val() || {};
@@ -44,14 +50,14 @@ export default function Home() {
     const playerRef = ref(db, "pariahTV/playerState");
     onValue(playerRef, (snapshot) => {
       const data = snapshot.val() || {};
-      setPlayerStateLocal({
+      setPlayerState({
         playing: !!data.playing,
         currentTrackIndex: data.currentTrackIndex || 0,
       });
     });
   }, []);
 
-  // Rotate creators every 6s
+  // Rotate Spotlight creators
   useEffect(() => {
     if (!creators.length) return;
     const interval = setInterval(() => {
@@ -69,27 +75,22 @@ export default function Home() {
     featured: false,
   };
 
-  const db = typeof window !== "undefined" ? getDatabase(app) : null;
-
-  const handlePlayToggle = () => {
-    if (!db) return;
-    const newState = !playerState.playing;
+  // Player controls
+  const togglePlay = () => {
     set(ref(db, "pariahTV/playerState"), {
       ...playerState,
-      playing: newState,
+      playing: !playerState.playing,
     });
   };
 
-  const handleNext = () => {
-    if (!db) return;
+  const nextTrack = () => {
     set(ref(db, "pariahTV/playerState"), {
       ...playerState,
       currentTrackIndex: playerState.currentTrackIndex + 1,
     });
   };
 
-  const handlePrev = () => {
-    if (!db) return;
+  const prevTrack = () => {
     set(ref(db, "pariahTV/playerState"), {
       ...playerState,
       currentTrackIndex:
@@ -99,28 +100,28 @@ export default function Home() {
     });
   };
 
-  // Floating hearts (only emojis in the whole UI)
+  // Floating hearts (only emoji allowed)
   useEffect(() => {
-    if (typeof window === "undefined") return;
     const container = document.querySelector(".ptv-emoji-container");
     if (!container) return;
 
-    function spawnEmoji() {
-      const emoji = document.createElement("div");
-      emoji.className = "ptv-emoji";
-      emoji.innerText = "❤️";
-      emoji.style.left = Math.random() * 80 + "%";
-      emoji.style.animationDuration = 2 + Math.random() * 2 + "s";
-      container.appendChild(emoji);
-      setTimeout(() => emoji.remove(), 4000);
-    }
+    const spawn = () => {
+      const el = document.createElement("div");
+      el.className = "ptv-emoji";
+      el.innerText = "❤️";
+      el.style.left = Math.random() * 80 + "%";
+      el.style.animationDuration = 2 + Math.random() * 2 + "s";
+      container.appendChild(el);
+      setTimeout(() => el.remove(), 4000);
+    };
 
-    const interval = setInterval(spawnEmoji, 1200);
+    const interval = setInterval(spawn, 1200);
     return () => clearInterval(interval);
   }, []);
 
   return (
     <main className="ptv-main">
+
       {/* VIDEO PLAYER */}
       <section className="ptv-video ptv-glass fade-up">
         <div className="ptv-video-overlay-top">
@@ -134,9 +135,7 @@ export default function Home() {
 
         <div className="ptv-video-overlay-bottom">
           <div className="ptv-show-strip">{nowPlaying.title}</div>
-          <div className="ptv-now-playing">
-            Now Playing: {nowPlaying.track}
-          </div>
+          <div className="ptv-now-playing">Now Playing: {nowPlaying.track}</div>
         </div>
 
         <div className="ptv-breaking-news">
@@ -148,15 +147,14 @@ export default function Home() {
       <section className="ptv-creator-spotlight ptv-glass fade-up">
         <div
           className={
-            "ptv-featured-badge" +
-            (currentCreator.featured ? " active" : "")
+            "ptv-featured-badge" + (currentCreator.featured ? " active" : "")
           }
         >
           FEATURED
         </div>
 
         <img
-          src={currentCreator.img || "/logos/pariah-tv-full.PNG"}
+          src={currentCreator.img}
           alt="Creator"
           className="ptv-creator-image"
         />
@@ -167,7 +165,7 @@ export default function Home() {
           <p className="ptv-creator-line">{currentCreator.line}</p>
 
           <a
-            href={currentCreator.link || "#"}
+            href={currentCreator.link}
             target="_blank"
             rel="noreferrer"
             className="ptv-creator-btn"
@@ -177,10 +175,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PLAYER CONTROLS — CUSTOM, NO EMOJIS */}
+      {/* PLAYER CONTROLS */}
       <section className="ptv-player-controls ptv-glass fade-up">
         <div className="ptv-controls-row">
-          <button className="ptv-btn" onClick={handlePrev}>
+          <button className="ptv-btn" onClick={prevTrack}>
             <span className="ptv-btn-label">PREV</span>
           </button>
 
@@ -189,14 +187,14 @@ export default function Home() {
               "ptv-btn ptv-btn-play" +
               (playerState.playing ? " ptv-btn-active" : "")
             }
-            onClick={handlePlayToggle}
+            onClick={togglePlay}
           >
             <span className="ptv-btn-label">
               {playerState.playing ? "PAUSE" : "PLAY"}
             </span>
           </button>
 
-          <button className="ptv-btn" onClick={handleNext}>
+          <button className="ptv-btn" onClick={nextTrack}>
             <span className="ptv-btn-label">NEXT</span>
           </button>
 
@@ -213,26 +211,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* RADIO SECTION */}
+      {/* RADIO */}
       <section className="ptv-radio ptv-glass fade-up">
         <h2>PARIAH RADIO</h2>
         <p>Now Playing: {nowPlaying.track}</p>
 
         <div className="ptv-waveform">
-          <div className="bar"></div>
-          <div className="bar"></div>
-          <div className="bar"></div>
-          <div className="bar"></div>
-          <div className="bar"></div>
-          <div className="bar"></div>
-          <div className="bar"></div>
-          <div className="bar"></div>
-          <div className="bar"></div>
-          <div className="bar"></div>
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} className="bar"></div>
+          ))}
         </div>
       </section>
 
-      {/* CHAT SECTION */}
+      {/* CHAT */}
       <section className="ptv-chat ptv-glass fade-up">
         <div className="ptv-chat-message">
           <strong>User123:</strong> This is fire
@@ -263,7 +254,7 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* FLOATING HEART REACTIONS (ONLY EMOJI USAGE) */}
+      {/* FLOATING HEARTS */}
       <div className="ptv-emoji-container"></div>
     </main>
   );
