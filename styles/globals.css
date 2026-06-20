@@ -1,180 +1,246 @@
-/* --------------------------------------------------
-   PARIAH TV — GLOBAL STYLES (FULL VERSION)
-   Cinematic, matte-black, red-accent UI system
--------------------------------------------------- */
+/* ------------------------------------------------------ */
+/* 2026 PARIAH TV GLASS UI — GLOBAL LAYER */
+/* ------------------------------------------------------ */
 
-/* RESET */
-* {
-  margin: 0;
-  padding: 0;
+#pariah-glass-root {
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(22px) saturate(180%);
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.viewer {
+  width: 100%;
+  max-width: 480px;
+  padding: 20px 16px 60px;
   box-sizing: border-box;
 }
 
-html, body {
-  height: 100%;
-  background: #000;
-  color: #fff;
-  font-family: "Space Grotesk", sans-serif;
-  -webkit-font-smoothing: antialiased;
+/* ------------------------------------------------------ */
+/* UNIVERSAL GLASS PANEL */
+/* ------------------------------------------------------ */
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 14px;
+  margin-top: 18px;
+  backdrop-filter: blur(14px) saturate(160%);
+  box-shadow: 0 0 22px rgba(255, 0, 0, 0.05);
 }
 
-/* SAFE AREA FOR iPHONE */
-body {
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-/* GLOBAL LAYOUT */
-main {
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%);
-}
-
+/* ------------------------------------------------------ */
 /* LOGO */
+/* ------------------------------------------------------ */
+
 .logo-section img {
-  width: 180px;
-  height: auto;
-  margin-top: 40px;
-  filter: drop-shadow(0 0 10px rgba(196,0,0,0.4));
-  animation: fadeIn 1.2s ease forwards;
+  width: 140px;
+  display: block;
+  margin: 0 auto;
+  opacity: 0.92;
 }
 
-/* HEADERS */
-h1, h2, h3 {
-  text-transform: uppercase;
+/* ------------------------------------------------------ */
+/* ADS BANNERS */
+/* ------------------------------------------------------ */
+
+.ads-banner img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  opacity: 0.9;
+}
+
+/* ------------------------------------------------------ */
+/* VIDEO PLAYER */
+/* ------------------------------------------------------ */
+
+.video-wrapper {
+  padding: 0;
+}
+
+.video-player {
+  width: 100%;
+  border-radius: 6px;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ------------------------------------------------------ */
+/* RADIO BAR */
+/* ------------------------------------------------------ */
+
+.radio-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.radio-live-dot {
+  width: 10px;
+  height: 10px;
+  background: #ff0000;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #ff0000;
+}
+
+.radio-label {
+  font-size: 0.75rem;
   letter-spacing: 1px;
-  font-weight: 600;
+  opacity: 0.8;
 }
 
-/* CONTENT BLOCK */
-.content {
-  margin-top: 30px;
-  text-align: center;
-  width: 90%;
-  max-width: 600px;
+.radio-title {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  opacity: 0.6;
 }
 
-.content p {
-  margin: 10px 0;
-  opacity: 0.85;
+.radio-track {
+  margin-top: 4px;
   font-size: 1rem;
 }
 
-/* SPOTLIGHT CARD */
-.spotlight-card {
-  width: 90%;
-  max-width: 600px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  padding: 20px;
-  margin-top: 20px;
-  backdrop-filter: blur(10px);
-  animation: fadeInUp 0.8s ease forwards;
-}
-
-/* PLAYER */
-.player {
-  width: 90%;
-  max-width: 600px;
-  margin-top: 20px;
-  padding: 20px;
-  background: rgba(255,255,255,0.04);
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.08);
-  backdrop-filter: blur(8px);
-}
-
-.player-title {
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-}
-
-.progress-bar {
+.radio-frequency-bar {
   width: 100%;
   height: 4px;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.08);
   border-radius: 4px;
+  margin-top: 10px;
   overflow: hidden;
 }
 
-.progress-fill {
+.radio-frequency-fill {
   width: 40%;
   height: 100%;
-  background: #C40000;
-  animation: pulseBar 2s infinite ease-in-out;
+  background: #ff0000;
+  box-shadow: 0 0 12px #ff0000;
 }
 
+/* ------------------------------------------------------ */
 /* TICKER */
+/* ------------------------------------------------------ */
+
 .ticker {
-  width: 100%;
-  margin-top: 30px;
+  padding: 10px 0;
   overflow: hidden;
-  white-space: nowrap;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .ticker-text {
-  display: inline-block;
-  padding: 10px 0;
-  animation: tickerScroll 12s linear infinite;
+  white-space: nowrap;
+  animation: ticker-scroll 12s linear infinite;
+  font-size: 0.9rem;
+  opacity: 0.85;
 }
 
-/* REACTIONS */
-.reactions {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  font-size: 1.8rem;
-  animation: floatUp 3s infinite ease-in-out;
+@keyframes ticker-scroll {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
 }
 
-/* ANIMATIONS */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* ------------------------------------------------------ */
+/* CHAT PANEL */
+/* ------------------------------------------------------ */
+
+.chat-header {
+  margin-bottom: 10px;
 }
 
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+.chat-title {
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  opacity: 0.8;
 }
 
-@keyframes tickerScroll {
-  from { transform: translateX(100%); }
-  to { transform: translateX(-100%); }
+.chat-messages {
+  height: 220px;
+  overflow-y: auto;
+  padding-right: 6px;
 }
 
-@keyframes pulseBar {
-  0% { width: 20%; }
-  50% { width: 60%; }
-  100% { width: 20%; }
+.chat-footer {
+  margin-top: 12px;
 }
 
-@keyframes floatUp {
-  0% { transform: translateY(0); opacity: 0.8; }
-  50% { transform: translateY(-10px); opacity: 1; }
-  100% { transform: translateY(0); opacity: 0.8; }
+.chat-identity input,
+.chat-message-input {
+  width: 100%;
+  padding: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  color: white;
+  margin-bottom: 10px;
 }
 
-/* RESPONSIVE */
-@media (max-width: 480px) {
-  .logo-section img {
-    width: 150px;
-  }
+.chat-input-row {
+  display: flex;
+  gap: 10px;
+}
 
-  .content p {
-    font-size: 0.9rem;
-  }
+.chat-send-button {
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
 
-  .reactions {
-    font-size: 1.4rem;
-    bottom: 1.5rem;
-    right: 1.5rem;
-  }
+.chat-send-button:active {
+  box-shadow: 0 0 12px #ff0000;
+  border-color: #ff0000;
+}
+
+.chat-reactions-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.reaction-button {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.floating-reactions-layer {
+  position: relative;
+  height: 0;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------ */
+/* SPOTLIGHT */
+/* ------------------------------------------------------ */
+
+.spotlight-title {
+  font-size: 1rem;
+  opacity: 0.7;
+  margin-bottom: 6px;
+}
+
+.spotlight-main {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.spotlight-sub {
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+.spotlight-status {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  opacity: 0.6;
 }
